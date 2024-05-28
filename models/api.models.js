@@ -22,7 +22,6 @@ const fetchAllEndpoints = () => {
 };
 
 const fetchArticleById = (id) => {
-  console.log(id, "id here at model");
   if (id === undefined || !typeof id === "number") {
     return Promise.reject({ status: 400, msg: "Bad Request" });
   }

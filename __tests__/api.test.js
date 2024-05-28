@@ -97,7 +97,6 @@ describe("GET: /api/articles/1", () => {
       .get("/api/articles/9999")
       .expect(404)
       .then((res) => {
-        console.log(res.msg, "from test");
         expect(res.body.msg).toBe("Bad Request");
       });
   });
