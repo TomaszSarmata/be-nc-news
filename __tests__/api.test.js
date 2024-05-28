@@ -38,3 +38,30 @@ describe("GET: /api/topics", () => {
       });
   });
 });
+
+describe("GET: /api", () => {
+  test("200: should return a full list of objects from the endpoints.json file", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then((res) => {
+        const endpointsObj = res.body.endpoints;
+        const endpointsArr = Object.values(endpointsObj);
+        endpointsArr.forEach((endpoint) => {
+          expect(endpoint).toMatchObject({
+            description: expect.any(String),
+            queries: expect.any(Array),
+            exampleResponse: expect.any(Object),
+          });
+        });
+      });
+  });
+  test("404: ERROR - responds with the path is not found", () => {
+    return request(app)
+      .get("/ap")
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("Route not found");
+      });
+  });
+});

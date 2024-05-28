@@ -1,4 +1,4 @@
-const fetchAllTopics = require("../models/api.models");
+const { fetchAllTopics, fetchAllEndpoints } = require("../models/api.models");
 
 const getAllTopics = (req, res, next) => {
   fetchAllTopics()
@@ -10,4 +10,11 @@ const getAllTopics = (req, res, next) => {
     });
 };
 
-module.exports = { getAllTopics };
+const getAllEndpoints = (req, res, next) => {
+  //   console.log("hello from controller");
+  fetchAllEndpoints().then((endpoints) => {
+    res.status(200).send({ endpoints });
+  });
+};
+
+module.exports = { getAllTopics, getAllEndpoints };
