@@ -13,25 +13,29 @@ app.get("/api", getAllEndpoints);
 
 app.get("/api/articles/:article_id", getArticleById);
 
+// custom 404 errors for 'route not found'
 app.all("*", (req, res) => {
   res.status(404).send({ msg: "Route not found" });
 });
 
+// custom errors derived from deliberately rejecting promise at model when data comes back empty
+app.use((err, req, res, next) => {
+  if (err.status) {
+    res.status(err.status).send({ msg: err.msg });
+  } else next(err);
+});
+
+// errors thrown by psql
 app.use((err, req, res, next) => {
   if (err.code === "22P02") {
     res.status(400).send({ msg: "Bad Request" });
-  }
-  next(err);
+  } else next(err);
 });
 
+// unidentified errors
 app.use((err, req, res, next) => {
-  console.log("I run over here");
-
-  if (err.status && err.msg) {
-    res.status(err.status).send({ msg: err.msg });
-  } else {
-    res.status(500).send({ msg: "Internal Sever Error" });
-  }
+  console.log("error:", err);
+  res.status(500).send({ msg: "Internal Server Error" });
 });
 
 module.exports = app;
