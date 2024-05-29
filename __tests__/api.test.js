@@ -156,6 +156,7 @@ describe("GET: /api/articles/:article_id/comments", () => {
           });
           expect(comment.article_id).toBe(1);
         });
+        expect(comments[0].body).toBe("I hate streaming noses");
       });
   });
   test("400: ERROR - responds with the error if the data type for id is incorrect", () => {
