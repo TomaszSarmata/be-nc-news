@@ -4,6 +4,7 @@ const {
   fetchArticleById,
   fetchAllArticles,
   fetchCommentsByArticleId,
+  insertComment,
 } = require("../models/api.models");
 
 const getAllTopics = (req, res, next) => {
@@ -60,10 +61,23 @@ const getCommentsByArticleId = (req, res, next) => {
     });
 };
 
+const addComment = (req, res, next) => {
+  const articleId = req.params.article_id;
+  insertComment(req.body, articleId)
+    .then((comment) => {
+      console.log(comment, "comment here");
+      res.status(201).send({ comment });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
 module.exports = {
   getAllTopics,
   getAllEndpoints,
   getArticleById,
   getAllArticles,
   getCommentsByArticleId,
+  addComment,
 };
