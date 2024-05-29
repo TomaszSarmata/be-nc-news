@@ -66,9 +66,31 @@ const fetchArticleById = (id) => {
     });
 };
 
+const fetchCommentsByArticleId = (articleId) => {
+  if (articleId === undefined || !typeof articleId === "number") {
+    return Promise.reject({ status: 400, msg: "Bad Request" });
+  }
+  return db
+    .query(
+      `
+    SELECT * FROM comments
+    WHERE article_id = $1
+    `,
+      [articleId]
+    )
+    .then((res) => {
+      if (res.rows.length === 0) {
+        return Promise.reject({ status: 404, msg: "Bad Request" });
+      } else {
+        return res.rows;
+      }
+    });
+};
+
 module.exports = {
   fetchAllTopics,
   fetchAllEndpoints,
   fetchArticleById,
   fetchAllArticles,
+  fetchCommentsByArticleId,
 };

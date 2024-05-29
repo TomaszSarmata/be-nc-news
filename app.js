@@ -4,6 +4,7 @@ const {
   getAllEndpoints,
   getArticleById,
   getAllArticles,
+  getCommentsByArticleId,
 } = require("./controllers/api.controllers");
 
 const app = express();
@@ -15,6 +16,8 @@ app.get("/api", getAllEndpoints);
 app.get("/api/articles", getAllArticles);
 
 app.get("/api/articles/:article_id", getArticleById);
+
+app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 
 // custom 404 errors for 'route not found'
 app.all("*", (req, res) => {
