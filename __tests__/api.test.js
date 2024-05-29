@@ -176,3 +176,43 @@ describe("GET: /api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("POST: /api/articles/:article_id/comments", () => {
+  test("200: should add a comment with the relevant article ID and respond with the newly added comment", () => {
+    const comment = { username: "lurker", body: "test comment", article_id: 1 };
+
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(comment)
+      .expect(201)
+      .then((res) => {
+        const comment = res.body.comment;
+        expect(comment).toMatchObject({
+          author: "lurker",
+          body: "test comment",
+        });
+      });
+  });
+  test("400: ERROR - responds with the error if the data type for id is incorrect", () => {
+    const comment = { username: "lurker", body: "test comment", article_id: 1 };
+
+    return request(app)
+      .post("/api/articles/nonsense/comments")
+      .send(comment)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad Request");
+      });
+  });
+  test("404: ERROR - responds with The article id does not exist if article_id not present", () => {
+    const comment = { username: "lurker", body: "test comment", article_id: 1 };
+
+    return request(app)
+      .post("/api/articles/9999/comments")
+      .send(comment)
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("The article id does not exist");
+      });
+  });
+});

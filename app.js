@@ -5,9 +5,12 @@ const {
   getArticleById,
   getAllArticles,
   getCommentsByArticleId,
+  addComment,
 } = require("./controllers/api.controllers");
 
 const app = express();
+
+app.use(express.json());
 
 app.get("/api/topics", getAllTopics);
 
@@ -19,6 +22,8 @@ app.get("/api/articles/:article_id", getArticleById);
 
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 
+app.post("/api/articles/:article_id/comments", addComment);
+
 // custom 404 errors for 'route not found'
 app.all("*", (req, res) => {
   res.status(404).send({ msg: "Route not found" });
@@ -27,6 +32,8 @@ app.all("*", (req, res) => {
 // custom errors derived from deliberately rejecting promise at model when data comes back empty
 app.use((err, req, res, next) => {
   if (err.status) {
+    console.log("I run here in block");
+
     res.status(err.status).send({ msg: err.msg });
   } else next(err);
 });
@@ -35,6 +42,8 @@ app.use((err, req, res, next) => {
 app.use((err, req, res, next) => {
   if (err.code === "22P02") {
     res.status(400).send({ msg: "Bad Request" });
+  } else if (err.code === "23503") {
+    res.status(404).send({ msg: "The article id does not exist" });
   } else next(err);
 });
 
