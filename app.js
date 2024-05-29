@@ -3,6 +3,7 @@ const {
   getAllTopics,
   getAllEndpoints,
   getArticleById,
+  getAllArticles,
 } = require("./controllers/api.controllers");
 
 const app = express();
@@ -10,6 +11,8 @@ const app = express();
 app.get("/api/topics", getAllTopics);
 
 app.get("/api", getAllEndpoints);
+
+app.get("/api/articles", getAllArticles);
 
 app.get("/api/articles/:article_id", getArticleById);
 

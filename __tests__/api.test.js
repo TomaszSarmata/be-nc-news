@@ -101,3 +101,39 @@ describe("GET: /api/articles/1", () => {
       });
   });
 });
+
+describe("GET: /api/articles", () => {
+  test("200: should return all articles with the necessary info for each article", () => {
+    return request(app)
+      .get("/api/articles")
+      .expect(200)
+      .then((res) => {
+        const articles = res.body.articles;
+        expect(articles.length).toBe(13);
+        expect(articles[0].title).toBe(
+          "Eight pug gifs that remind me of mitch"
+        );
+        articles.forEach((article) => {
+          expect(article).toMatchObject({
+            author: expect.any(String),
+            title: expect.any(String),
+            article_id: expect.any(Number),
+            topic: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            article_img_url: expect.any(String),
+            comment_count: expect.any(String),
+          });
+          expect(article).not.toHaveProperty("body");
+        });
+      });
+  });
+  test("400: ERROR - responds with the error if the data type for id is incorrect", () => {
+    return request(app)
+      .get("/api/articles/nonsense")
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad Request");
+      });
+  });
+});

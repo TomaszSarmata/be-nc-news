@@ -2,6 +2,7 @@ const {
   fetchAllTopics,
   fetchAllEndpoints,
   fetchArticleById,
+  fetchAllArticles,
 } = require("../models/api.models");
 
 const getAllTopics = (req, res, next) => {
@@ -25,6 +26,16 @@ const getAllEndpoints = (req, res, next) => {
     });
 };
 
+const getAllArticles = (req, res, next) => {
+  fetchAllArticles()
+    .then((articles) => {
+      res.status(200).send({ articles });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
 const getArticleById = (req, res, next) => {
   const id = req.params.article_id;
   fetchArticleById(id)
@@ -36,4 +47,9 @@ const getArticleById = (req, res, next) => {
     });
 };
 
-module.exports = { getAllTopics, getAllEndpoints, getArticleById };
+module.exports = {
+  getAllTopics,
+  getAllEndpoints,
+  getArticleById,
+  getAllArticles,
+};
