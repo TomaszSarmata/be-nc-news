@@ -3,6 +3,7 @@ const {
   fetchAllEndpoints,
   fetchArticleById,
   fetchAllArticles,
+  fetchCommentsByArticleId,
 } = require("../models/api.models");
 
 const getAllTopics = (req, res, next) => {
@@ -47,9 +48,22 @@ const getArticleById = (req, res, next) => {
     });
 };
 
+const getCommentsByArticleId = (req, res, next) => {
+  const articleId = req.params.article_id;
+  fetchCommentsByArticleId(articleId)
+    .then((comments) => {
+      console.log(comments, "data controller");
+      res.status(200).send({ comments });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
 module.exports = {
   getAllTopics,
   getAllEndpoints,
   getArticleById,
   getAllArticles,
+  getCommentsByArticleId,
 };
