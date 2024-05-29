@@ -89,7 +89,7 @@ describe("GET: /api/articles/1", () => {
       .get("/api/articles/9999")
       .expect(404)
       .then((res) => {
-        expect(res.body.msg).toBe("Bad Request");
+        expect(res.body.msg).toBe("Invalid article id");
       });
   });
 });

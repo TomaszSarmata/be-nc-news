@@ -59,7 +59,7 @@ const fetchArticleById = (id) => {
     )
     .then((results) => {
       if (results.rows.length === 0) {
-        return Promise.reject({ status: 404, msg: "Bad Request" });
+        return Promise.reject({ status: 404, msg: "Invalid article id" });
       } else {
         return results.rows[0];
       }
