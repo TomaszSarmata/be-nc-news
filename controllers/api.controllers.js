@@ -5,6 +5,7 @@ const {
   fetchAllArticles,
   fetchCommentsByArticleId,
   insertComment,
+  patchArticle,
 } = require("../models/api.models");
 
 const getAllTopics = (req, res, next) => {
@@ -53,7 +54,6 @@ const getCommentsByArticleId = (req, res, next) => {
   const articleId = req.params.article_id;
   fetchCommentsByArticleId(articleId)
     .then((comments) => {
-      console.log(comments, "data controller");
       res.status(200).send({ comments });
     })
     .catch((err) => {
@@ -65,8 +65,18 @@ const addComment = (req, res, next) => {
   const articleId = req.params.article_id;
   insertComment(req.body, articleId)
     .then((comment) => {
-      console.log(comment, "comment here");
       res.status(201).send({ comment });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+const updateComment = (req, res, next) => {
+  const articleId = req.params.article_id;
+  patchArticle(req.body, articleId)
+    .then((article) => {
+      res.status(200).send({ article });
     })
     .catch((err) => {
       next(err);
@@ -80,4 +90,5 @@ module.exports = {
   getAllArticles,
   getCommentsByArticleId,
   addComment,
+  updateComment,
 };

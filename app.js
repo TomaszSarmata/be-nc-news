@@ -6,6 +6,7 @@ const {
   getAllArticles,
   getCommentsByArticleId,
   addComment,
+  updateComment,
 } = require("./controllers/api.controllers");
 
 const app = express();
@@ -24,6 +25,8 @@ app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 
 app.post("/api/articles/:article_id/comments", addComment);
 
+app.patch("/api/articles/:article_id", updateComment);
+
 // custom 404 errors for 'route not found'
 app.all("*", (req, res) => {
   res.status(404).send({ msg: "Route not found" });
@@ -32,8 +35,6 @@ app.all("*", (req, res) => {
 // custom errors derived from deliberately rejecting promise at model when data comes back empty
 app.use((err, req, res, next) => {
   if (err.status) {
-    console.log("I run here in block");
-
     res.status(err.status).send({ msg: err.msg });
   } else next(err);
 });

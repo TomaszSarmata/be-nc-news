@@ -105,6 +105,30 @@ const insertComment = (newComment, articleId) => {
     });
 };
 
+const patchArticle = (newVote, article_id) => {
+  const votes = newVote.inc_votes;
+  return db
+    .query(
+      `
+  UPDATE articles
+  SET votes = votes + $1
+  WHERE article_id = $2
+  RETURNING *;
+  `,
+      [votes, article_id]
+    )
+    .then((res) => {
+      if (res.rows.length === 0) {
+        return Promise.reject({
+          status: 404,
+          msg: "The article id does not exist",
+        });
+      } else {
+        return res.rows[0];
+      }
+    });
+};
+
 module.exports = {
   fetchAllTopics,
   fetchAllEndpoints,
@@ -112,4 +136,5 @@ module.exports = {
   fetchAllArticles,
   fetchCommentsByArticleId,
   insertComment,
+  patchArticle,
 };

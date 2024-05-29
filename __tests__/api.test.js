@@ -178,7 +178,7 @@ describe("GET: /api/articles/:article_id/comments", () => {
 });
 
 describe("POST: /api/articles/:article_id/comments", () => {
-  test("200: should add a comment with the relevant article ID and respond with the newly added comment", () => {
+  test("201: should add a comment with the relevant article ID and respond with the newly added comment", () => {
     const comment = { username: "lurker", body: "test comment", article_id: 1 };
 
     return request(app)
@@ -210,6 +210,51 @@ describe("POST: /api/articles/:article_id/comments", () => {
     return request(app)
       .post("/api/articles/9999/comments")
       .send(comment)
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("The article id does not exist");
+      });
+  });
+});
+
+describe("UPDATE: /api/articles/:article_id", () => {
+  test("200: should update a given article by the number of votes and respond with updated article", () => {
+    const articleVote = { inc_votes: 1 };
+
+    return request(app)
+      .patch("/api/articles/1")
+      .send(articleVote)
+      .expect(200)
+      .then((res) => {
+        const article = res.body.article;
+        expect(article).toMatchObject({
+          article_id: expect.any(Number),
+          topic: expect.any(String),
+          author: expect.any(String),
+          body: expect.any(String),
+          created_at: expect.any(String),
+          votes: 101,
+          article_img_url: expect.any(String),
+        });
+      });
+  });
+  test("400: ERROR - responds with the error if the data type for id is incorrect", () => {
+    const articleVote = { inc_votes: 1 };
+
+    return request(app)
+      .patch("/api/articles/nonsense")
+      .send(articleVote)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad Request");
+      });
+  });
+  test("404: ERROR - responds with The article id does not exist if article_id not present", () => {
+    const articleVote = { inc_votes: 1 };
+
+    return request(app)
+      .patch("/api/articles/9999")
+      .send(articleVote)
       .expect(404)
       .then((res) => {
         expect(res.body.msg).toBe("The article id does not exist");
