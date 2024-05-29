@@ -46,9 +46,6 @@ const fetchAllArticles = () => {
 };
 
 const fetchArticleById = (id) => {
-  if (id === undefined || !typeof id === "number") {
-    return Promise.reject({ status: 400, msg: "Bad Request" });
-  }
   return db
     .query(
       `
