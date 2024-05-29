@@ -61,7 +61,7 @@ const getCommentsByArticleId = (req, res, next) => {
 
   Promise.all(promises)
     .then((resolvedPromises) => {
-      console.log(resolvedPromises);
+      console.log(resolvedPromises, "here resolved");
       const comments = resolvedPromises[0];
       res.status(200).send({ comments });
     })

@@ -164,7 +164,16 @@ describe("GET: /api/articles/:article_id/comments", () => {
       .get("/api/articles/9999/comments")
       .expect(404)
       .then((res) => {
-        expect(res.body.msg).toBe("Bad Request");
+        expect(res.body.msg).toBe("Article id invalid");
+      });
+  });
+
+  test("404: ERROR - responds with the error message if the article for a given article_id does not exists", () => {
+    return request(app)
+      .get("/api/articles/9999/comments")
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("Article id invalid");
       });
   });
 });

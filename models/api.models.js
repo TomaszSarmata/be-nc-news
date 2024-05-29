@@ -93,7 +93,7 @@ const fetchCommentsByArticleId = (articleId) => {
     )
     .then((res) => {
       if (res.rows.length === 0) {
-        return Promise.reject({ status: 404, msg: "Bad Request" });
+        return Promise.reject({ status: 404, msg: "Article id invalid" });
       } else {
         return res.rows;
       }
