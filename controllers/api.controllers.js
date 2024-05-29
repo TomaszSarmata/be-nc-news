@@ -6,6 +6,7 @@ const {
   fetchCommentsByArticleId,
   insertComment,
   patchArticle,
+  checkArticleExists,
 } = require("../models/api.models");
 
 const getAllTopics = (req, res, next) => {
@@ -52,13 +53,29 @@ const getArticleById = (req, res, next) => {
 
 const getCommentsByArticleId = (req, res, next) => {
   const articleId = req.params.article_id;
-  fetchCommentsByArticleId(articleId)
-    .then((comments) => {
+
+  const promises = [
+    fetchCommentsByArticleId(articleId),
+    checkArticleExists(articleId),
+  ];
+
+  Promise.all(promises)
+    .then((resolvedPromises) => {
+      console.log(resolvedPromises);
+      const comments = resolvedPromises[0];
       res.status(200).send({ comments });
     })
     .catch((err) => {
       next(err);
     });
+
+  // fetchCommentsByArticleId(articleId)
+  //   .then((comments) => {
+  //     res.status(200).send({ comments });
+  //   })
+  //   .catch((err) => {
+  //     next(err);
+  //   });
 };
 
 const addComment = (req, res, next) => {
