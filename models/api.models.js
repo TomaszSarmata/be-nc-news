@@ -63,10 +63,24 @@ const fetchArticleById = (id) => {
     });
 };
 
+const checkArticleExists = (articleId) => {
+  return db
+    .query(
+      `
+    SELECT * FROM articles 
+    WHERE
+    article_id = $1
+    `,
+      [articleId]
+    )
+    .then(({ rows }) => {
+      if (!rows.length) {
+        return Promise.reject({ status: 404, msg: "Article id invalid" });
+      }
+    });
+};
+
 const fetchCommentsByArticleId = (articleId) => {
-  if (articleId === undefined || !typeof articleId === "number") {
-    return Promise.reject({ status: 400, msg: "Bad Request" });
-  }
   return db
     .query(
       `
@@ -79,7 +93,7 @@ const fetchCommentsByArticleId = (articleId) => {
     )
     .then((res) => {
       if (res.rows.length === 0) {
-        return Promise.reject({ status: 404, msg: "Bad Request" });
+        return Promise.reject({ status: 404, msg: "Article id invalid" });
       } else {
         return res.rows;
       }
@@ -134,4 +148,5 @@ module.exports = {
   fetchCommentsByArticleId,
   insertComment,
   patchArticle,
+  checkArticleExists,
 };
