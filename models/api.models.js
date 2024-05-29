@@ -64,9 +64,6 @@ const fetchArticleById = (id) => {
 };
 
 const fetchCommentsByArticleId = (articleId) => {
-  if (articleId === undefined || !typeof articleId === "number") {
-    return Promise.reject({ status: 400, msg: "Bad Request" });
-  }
   return db
     .query(
       `
