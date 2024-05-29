@@ -46,9 +46,6 @@ const fetchAllArticles = () => {
 };
 
 const fetchArticleById = (id) => {
-  if (id === undefined || !typeof id === "number") {
-    return Promise.reject({ status: 400, msg: "Bad Request" });
-  }
   return db
     .query(
       `
@@ -59,7 +56,7 @@ const fetchArticleById = (id) => {
     )
     .then((results) => {
       if (results.rows.length === 0) {
-        return Promise.reject({ status: 404, msg: "Bad Request" });
+        return Promise.reject({ status: 404, msg: "Invalid article id" });
       } else {
         return results.rows[0];
       }
