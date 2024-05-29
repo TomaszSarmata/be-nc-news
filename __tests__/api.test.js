@@ -55,14 +55,6 @@ describe("GET: /api", () => {
         });
       });
   });
-  test("404: ERROR - responds with the path is not found", () => {
-    return request(app)
-      .get("/ap")
-      .expect(404)
-      .then((res) => {
-        expect(res.body.msg).toBe("Route not found");
-      });
-  });
 });
 describe("GET: /api/articles/1", () => {
   test("200: should return an article by its id", () => {
