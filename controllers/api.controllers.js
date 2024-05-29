@@ -1,4 +1,8 @@
-const { fetchAllTopics, fetchAllEndpoints } = require("../models/api.models");
+const {
+  fetchAllTopics,
+  fetchAllEndpoints,
+  fetchArticleById,
+} = require("../models/api.models");
 
 const getAllTopics = (req, res, next) => {
   fetchAllTopics()
@@ -12,9 +16,24 @@ const getAllTopics = (req, res, next) => {
 
 const getAllEndpoints = (req, res, next) => {
   //   console.log("hello from controller");
-  fetchAllEndpoints().then((endpoints) => {
-    res.status(200).send({ endpoints });
-  });
+  fetchAllEndpoints()
+    .then((endpoints) => {
+      res.status(200).send({ endpoints });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
 
-module.exports = { getAllTopics, getAllEndpoints };
+const getArticleById = (req, res, next) => {
+  const id = req.params.article_id;
+  fetchArticleById(id)
+    .then((article) => {
+      res.status(200).send({ article });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+module.exports = { getAllTopics, getAllEndpoints, getArticleById };

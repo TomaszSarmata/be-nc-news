@@ -5,7 +5,6 @@ const seed = require("../db/seeds/seed");
 const app = require("../app");
 
 beforeEach(() => {
-  console.log("seeding!");
   return seed(testData);
 });
 
@@ -62,6 +61,43 @@ describe("GET: /api", () => {
       .expect(404)
       .then((res) => {
         expect(res.body.msg).toBe("Route not found");
+      });
+  });
+});
+describe("GET: /api/articles/1", () => {
+  test("200: should return an article by its id", () => {
+    return request(app)
+      .get("/api/articles/1")
+      .expect(200)
+      .then((res) => {
+        const article = res.body.article;
+
+        expect(article).toMatchObject({
+          author: expect.any(String),
+          title: expect.any(String),
+          article_id: expect.any(Number),
+          body: expect.any(String),
+          topic: expect.any(String),
+          created_at: expect.any(String),
+          votes: expect.any(Number),
+          article_img_url: expect.any(String),
+        });
+      });
+  });
+  test("400: ERROR - responds with the error if the data type for id is incorrect", () => {
+    return request(app)
+      .get("/api/articles/nonsense")
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad Request");
+      });
+  });
+  test("404: ERROR - responds with the Bad Request", () => {
+    return request(app)
+      .get("/api/articles/9999")
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad Request");
       });
   });
 });
