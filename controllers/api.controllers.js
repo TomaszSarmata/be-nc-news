@@ -115,9 +115,13 @@ const removeComment = (req, res, next) => {
 
 const getAllUsers = (req, res, next) => {
   console.log("in the controller");
-  fetchAllUsers().then((users) => {
-    res.status(200).send({ users });
-  });
+  fetchAllUsers()
+    .then((users) => {
+      res.status(200).send({ users });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };
 
 module.exports = {
