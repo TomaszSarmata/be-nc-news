@@ -148,14 +148,16 @@ const insertComment = (newComment, articleId) => {
       [username, body, articleId]
     )
     .then((res) => {
-      console.log("I run here");
-
       return res.rows[0];
     });
 };
 
 const patchArticle = (newVote, article_id) => {
   const votes = newVote.inc_votes;
+  console.log(votes, "votes here");
+  if (!votes) {
+    return Promise.reject({ status: 400, msg: "inc_votes missing" });
+  }
   return db
     .query(
       `
