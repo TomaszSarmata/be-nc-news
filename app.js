@@ -28,7 +28,7 @@ app.post("/api/articles/:article_id/comments", addComment);
 
 app.patch("/api/articles/:article_id", updateComment);
 
-app.delete("/api/articles/:article_id", removeComment);
+app.delete("/api/comments/:comment_id", removeComment);
 
 // custom 404 errors for 'route not found'
 app.all("*", (req, res) => {
