@@ -7,6 +7,8 @@ const {
   insertComment,
   patchArticle,
   checkArticleExists,
+  deleteComment,
+  checkCommentExists,
 } = require("../models/api.models");
 
 const getAllTopics = (req, res, next) => {
@@ -20,7 +22,6 @@ const getAllTopics = (req, res, next) => {
 };
 
 const getAllEndpoints = (req, res, next) => {
-  //   console.log("hello from controller");
   fetchAllEndpoints()
     .then((endpoints) => {
       res.status(200).send({ endpoints });
@@ -55,27 +56,18 @@ const getCommentsByArticleId = (req, res, next) => {
   const articleId = req.params.article_id;
 
   const promises = [
-    fetchCommentsByArticleId(articleId),
     checkArticleExists(articleId),
+    fetchCommentsByArticleId(articleId),
   ];
 
   Promise.all(promises)
     .then((resolvedPromises) => {
-      console.log(resolvedPromises, "here resolved");
-      const comments = resolvedPromises[0];
+      const comments = resolvedPromises[1];
       res.status(200).send({ comments });
     })
     .catch((err) => {
       next(err);
     });
-
-  // fetchCommentsByArticleId(articleId)
-  //   .then((comments) => {
-  //     res.status(200).send({ comments });
-  //   })
-  //   .catch((err) => {
-  //     next(err);
-  //   });
 };
 
 const addComment = (req, res, next) => {
@@ -100,6 +92,21 @@ const updateComment = (req, res, next) => {
     });
 };
 
+const removeComment = (req, res, next) => {
+  const { comment_id } = req.params;
+
+  const promises = [checkCommentExists(comment_id), deleteComment(comment_id)];
+
+  Promise.all(promises)
+    .then((resolvedPromises) => {
+      const deletedComment = resolvedPromises[1];
+      res.status(204).send();
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
 module.exports = {
   getAllTopics,
   getAllEndpoints,
@@ -108,4 +115,5 @@ module.exports = {
   getCommentsByArticleId,
   addComment,
   updateComment,
+  removeComment,
 };

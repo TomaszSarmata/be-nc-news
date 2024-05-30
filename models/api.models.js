@@ -92,11 +92,7 @@ const fetchCommentsByArticleId = (articleId) => {
       [articleId]
     )
     .then((res) => {
-      if (res.rows.length === 0) {
-        return Promise.reject({ status: 404, msg: "Article id invalid" });
-      } else {
-        return res.rows;
-      }
+      return res.rows;
     });
 };
 
@@ -140,6 +136,38 @@ const patchArticle = (newVote, article_id) => {
     });
 };
 
+const checkCommentExists = (commnet_id) => {
+  return db
+    .query(
+      `
+    SELECT * FROM comments
+    WHERE
+    comment_id = $1
+    `,
+      [commnet_id]
+    )
+    .then((res) => {
+      if (!res.rows.length) {
+        return Promise.reject({ status: 404, msg: "Invalid id" });
+      }
+    });
+};
+
+const deleteComment = (comment_id) => {
+  return db
+    .query(
+      `
+  DELETE FROM comments
+  WHERE
+  comment_id = $1
+  `,
+      [comment_id]
+    )
+    .then(() => {
+      return "Comment deleted";
+    });
+};
+
 module.exports = {
   fetchAllTopics,
   fetchAllEndpoints,
@@ -149,4 +177,6 @@ module.exports = {
   insertComment,
   patchArticle,
   checkArticleExists,
+  deleteComment,
+  checkCommentExists,
 };
