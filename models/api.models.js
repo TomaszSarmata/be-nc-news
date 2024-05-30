@@ -148,6 +148,8 @@ const insertComment = (newComment, articleId) => {
       [username, body, articleId]
     )
     .then((res) => {
+      console.log("I run here");
+
       return res.rows[0];
     });
 };
