@@ -50,7 +50,9 @@ app.use((err, req, res, next) => {
   if (err.code === "22P02") {
     res.status(400).send({ msg: "Bad Request" });
   } else if (err.code === "23503") {
-    res.status(404).send({ msg: "The article id does not exist" });
+    console.log("I run here now");
+
+    res.status(404).send({ msg: "Not found" });
   } else next(err);
 });
 
