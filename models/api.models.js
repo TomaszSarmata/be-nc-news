@@ -168,6 +168,18 @@ const deleteComment = (comment_id) => {
     });
 };
 
+const fetchAllUsers = () => {
+  return db
+    .query(
+      `
+    SELECT * FROM users
+    `
+    )
+    .then((res) => {
+      return res.rows;
+    });
+};
+
 module.exports = {
   fetchAllTopics,
   fetchAllEndpoints,
@@ -179,4 +191,5 @@ module.exports = {
   checkArticleExists,
   deleteComment,
   checkCommentExists,
+  fetchAllUsers,
 };

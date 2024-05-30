@@ -9,6 +9,7 @@ const {
   checkArticleExists,
   deleteComment,
   checkCommentExists,
+  fetchAllUsers,
 } = require("../models/api.models");
 
 const getAllTopics = (req, res, next) => {
@@ -107,6 +108,13 @@ const removeComment = (req, res, next) => {
     });
 };
 
+const getAllUsers = (req, res, next) => {
+  console.log("in the controller");
+  fetchAllUsers().then((users) => {
+    res.status(200).send({ users });
+  });
+};
+
 module.exports = {
   getAllTopics,
   getAllEndpoints,
@@ -116,4 +124,5 @@ module.exports = {
   addComment,
   updateComment,
   removeComment,
+  getAllUsers,
 };
