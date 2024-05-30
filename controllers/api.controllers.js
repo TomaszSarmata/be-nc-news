@@ -7,6 +7,7 @@ const {
   insertComment,
   patchArticle,
   checkArticleExists,
+  deleteComment,
 } = require("../models/api.models");
 
 const getAllTopics = (req, res, next) => {
@@ -55,27 +56,19 @@ const getCommentsByArticleId = (req, res, next) => {
   const articleId = req.params.article_id;
 
   const promises = [
-    fetchCommentsByArticleId(articleId),
     checkArticleExists(articleId),
+    fetchCommentsByArticleId(articleId),
   ];
 
   Promise.all(promises)
     .then((resolvedPromises) => {
       console.log(resolvedPromises, "here resolved");
-      const comments = resolvedPromises[0];
+      const comments = resolvedPromises[1];
       res.status(200).send({ comments });
     })
     .catch((err) => {
       next(err);
     });
-
-  // fetchCommentsByArticleId(articleId)
-  //   .then((comments) => {
-  //     res.status(200).send({ comments });
-  //   })
-  //   .catch((err) => {
-  //     next(err);
-  //   });
 };
 
 const addComment = (req, res, next) => {
@@ -100,6 +93,11 @@ const updateComment = (req, res, next) => {
     });
 };
 
+const removeComment = (req, res, next) => {
+  console.log("in the controller");
+  deleteComment();
+};
+
 module.exports = {
   getAllTopics,
   getAllEndpoints,
@@ -108,4 +106,5 @@ module.exports = {
   getCommentsByArticleId,
   addComment,
   updateComment,
+  removeComment,
 };

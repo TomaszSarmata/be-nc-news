@@ -151,6 +151,17 @@ describe("GET: /api/articles/:article_id/comments", () => {
         expect(comments[0].body).toBe("I hate streaming noses");
       });
   });
+
+  test("200; responds with an error message if there are no comments", () => {
+    return request(app)
+      .get("/api/articles/7/comments")
+      .expect(200)
+      .then((res) => {
+        const comments = res.body.comments;
+        expect(comments).toEqual([]);
+      });
+  });
+
   test("400: ERROR - responds with the error if the data type for id is incorrect", () => {
     return request(app)
       .get("/api/articles/nonsense/comments")
@@ -261,4 +272,38 @@ describe("UPDATE: /api/articles/:article_id", () => {
         expect(res.body.msg).toBe("The article id does not exist");
       });
   });
+});
+//////////////////////
+xdescribe("DELETE: /api/comments/:comment_id", () => {
+  test("204: should deleted a given comment by its id and return 204 status code without any content", () => {
+    return request(app)
+      .delete("/api/comments/1")
+      .expect(204)
+      .then((res) => {
+        const msg = res.body.msg;
+        expect(msg).toBe("Article deleted");
+      });
+  });
+  // test("400: ERROR - responds with the error if the data type for id is incorrect", () => {
+  //   const articleVote = { inc_votes: 1 };
+
+  //   return request(app)
+  //     .patch("/api/articles/nonsense")
+  //     .send(articleVote)
+  //     .expect(400)
+  //     .then((res) => {
+  //       expect(res.body.msg).toBe("Bad Request");
+  //     });
+  // });
+  // test("404: ERROR - responds with The article id does not exist if article_id not present", () => {
+  //   const articleVote = { inc_votes: 1 };
+
+  //   return request(app)
+  //     .patch("/api/articles/9999")
+  //     .send(articleVote)
+  //     .expect(404)
+  //     .then((res) => {
+  //       expect(res.body.msg).toBe("The article id does not exist");
+  //     });
+  // });
 });

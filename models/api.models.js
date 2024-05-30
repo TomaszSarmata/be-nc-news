@@ -75,6 +75,8 @@ const checkArticleExists = (articleId) => {
     )
     .then(({ rows }) => {
       if (!rows.length) {
+        console.log("here data model 1");
+
         return Promise.reject({ status: 404, msg: "Article id invalid" });
       }
     });
@@ -92,11 +94,7 @@ const fetchCommentsByArticleId = (articleId) => {
       [articleId]
     )
     .then((res) => {
-      if (res.rows.length === 0) {
-        return Promise.reject({ status: 404, msg: "Article id invalid" });
-      } else {
-        return res.rows;
-      }
+      return res.rows;
     });
 };
 
