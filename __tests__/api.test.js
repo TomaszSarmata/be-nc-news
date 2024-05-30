@@ -120,12 +120,26 @@ describe("GET: /api/articles", () => {
         });
       });
   });
-  test("400: ERROR - responds with the error if the data type for id is incorrect", () => {
+  test("200: should return all articles filtered by the topic query if query provided", () => {
     return request(app)
-      .get("/api/articles/nonsense")
-      .expect(400)
+      .get("/api/articles?topic=mitch")
+      .expect(200)
       .then((res) => {
-        expect(res.body.msg).toBe("Bad Request");
+        const articles = res.body.articles;
+        expect(articles.length).toBe(12);
+        articles.forEach((article) => {
+          expect(article).toMatchObject({
+            topic: "mitch",
+          });
+        });
+      });
+  });
+  test("404: ERROR - responds with invalid query if the topic does not exist", () => {
+    return request(app)
+      .get("/api/articles?topic=NONSENSE")
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe("Invalid topic");
       });
   });
 });

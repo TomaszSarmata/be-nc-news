@@ -2,16 +2,32 @@ const { error } = require("console");
 const db = require("../db/connection.js");
 const fs = require("fs/promises");
 
-const fetchAllTopics = () => {
-  return db
-    .query(
-      `
+const fetchAllTopics = (topic) => {
+  if (topic) {
+    return db
+      .query(
+        `
+    SELECT * FROM topics
+    WHERE slug = $1
+    `,
+        [topic]
+      )
+      .then((results) => {
+        if (!results.rows.length) {
+          return Promise.reject({ status: 404, msg: "Invalid topic" });
+        }
+      });
+  } else {
+    return db
+      .query(
+        `
     SELECT * FROM topics
     `
-    )
-    .then((results) => {
-      return results.rows;
-    });
+      )
+      .then((results) => {
+        return results.rows;
+      });
+  }
 };
 
 const fetchAllEndpoints = () => {
@@ -21,7 +37,7 @@ const fetchAllEndpoints = () => {
   });
 };
 
-const fetchAllArticles = () => {
+const fetchAllArticles = (topic) => {
   return db
     .query(
       `
@@ -41,7 +57,17 @@ const fetchAllArticles = () => {
   `
     )
     .then((res) => {
-      return res.rows;
+      const articles = res.rows;
+
+      if (topic) {
+        const filteredArticles = articles.filter(
+          (article) => article.topic === topic
+        );
+        console.log(filteredArticles, "filtered here");
+        return filteredArticles;
+      } else {
+        return articles;
+      }
     });
 };
 
