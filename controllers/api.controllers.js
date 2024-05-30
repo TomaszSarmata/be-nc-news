@@ -31,10 +31,15 @@ const getAllEndpoints = (req, res, next) => {
       next(err);
     });
 };
-
+////////
 const getAllArticles = (req, res, next) => {
-  fetchAllArticles()
-    .then((articles) => {
+  const { topic } = req.query;
+
+  const promises = [fetchAllTopics(topic), fetchAllArticles(topic)];
+
+  Promise.all(promises)
+    .then((resolvedPromises) => {
+      const articles = resolvedPromises[1];
       res.status(200).send({ articles });
     })
     .catch((err) => {
