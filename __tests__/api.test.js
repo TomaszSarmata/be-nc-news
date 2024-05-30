@@ -220,7 +220,7 @@ describe("POST: /api/articles/:article_id/comments", () => {
         });
       });
   });
-  test.only("201: should add a comment as expected and ignore unnecessary key-values on the post object", () => {
+  test("201: should add a comment as expected and ignore unnecessary key-values on the post object", () => {
     const comment = {
       username: "lurker",
       body: "test comment",
@@ -319,6 +319,8 @@ describe("UPDATE: /api/articles/:article_id", () => {
         });
       });
   });
+  ////////////////
+
   test("400: ERROR - responds with the error if the data type for id is incorrect", () => {
     const articleVote = { inc_votes: 1 };
 
@@ -328,6 +330,28 @@ describe("UPDATE: /api/articles/:article_id", () => {
       .expect(400)
       .then((res) => {
         expect(res.body.msg).toBe("Bad Request");
+      });
+  });
+  test("400: ERROR - responds with the error if the data type for inc_votes is incorrect", () => {
+    const articleVote = { inc_votes: "nonsense" };
+
+    return request(app)
+      .patch("/api/articles/1")
+      .send(articleVote)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("Bad Request");
+      });
+  });
+  test("400: ERROR - responds with the error if the data type for id is incorrect", () => {
+    const articleVote = {};
+
+    return request(app)
+      .patch("/api/articles/1")
+      .send(articleVote)
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("inc_votes missing");
       });
   });
   test("404: ERROR - responds with The article id does not exist if article_id not present", () => {
@@ -342,7 +366,7 @@ describe("UPDATE: /api/articles/:article_id", () => {
       });
   });
 });
-//////////////////////
+
 describe("DELETE: /api/comments/:comment_id", () => {
   test("204: should deleted a given comment by its id and return 204 status code without any content", () => {
     return request(app)
