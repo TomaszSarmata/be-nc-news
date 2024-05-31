@@ -8,6 +8,9 @@ const config = {};
 
 if (ENV === "production") {
   config.connectionString = process.env.DATABASE_URL;
+  config.ssl = {
+    rejectUnauthorized: false, // This line ensures SSL is used and ignores self-signed certificates.
+  };
   config.max = 2;
 }
 
