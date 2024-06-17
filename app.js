@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const {
   getAllTopics,
   getAllEndpoints,
@@ -12,6 +13,8 @@ const {
 } = require("./controllers/api.controllers");
 
 const app = express();
+
+app.use(cors());
 
 app.use(express.json());
 
