@@ -267,13 +267,14 @@ describe("POST: /api/articles/:article_id/comments", () => {
     const comment = { username: "lurker", article_id: 1 };
 
     return request(app)
-      .post("/api/articles/nonsense/comments")
+      .post("/api/articles/1/comments")
       .send(comment)
       .expect(400)
       .then((res) => {
         expect(res.body.msg).toBe("Bad Request");
       });
   });
+
   test("404: ERROR - responds with not found id does not exist if article_id not present", () => {
     const comment = { username: "lurker", body: "test comment", article_id: 1 };
 
